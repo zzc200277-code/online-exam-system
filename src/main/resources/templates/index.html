@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>在线考试系统</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: "Microsoft YaHei", Arial, sans-serif; color: #1f2937; background: #f5f7fb; }
+        header { background: #1d4ed8; color: #fff; padding: 18px 36px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 22px; }
+        header a { color: #fff; text-decoration: none; margin-left: 18px; }
+        main { max-width: 980px; margin: 36px auto; padding: 0 20px; }
+        .welcome { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 28px; margin-bottom: 20px; }
+        .welcome h2 { margin: 0 0 10px; font-size: 24px; }
+        .welcome p { margin: 0; color: #64748b; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+        .card { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; }
+        .card:hover { border-color: #1d4ed8; }
+        .card h3 { margin: 0 0 8px; font-size: 18px; }
+        .card p { margin: 0; color: #64748b; line-height: 1.6; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>在线考试系统</h1>
+    <nav>
+        <a th:if="${session.user == null}" th:href="@{/login}">登录 / 注册</a>
+        <span th:if="${session.user != null}" th:text="'当前用户：' + ${session.user.username}"></span>
+        <a th:if="${session.user != null}" th:href="@{/logout}">退出</a>
+    </nav>
+</header>
+<main>
+    <section class="welcome">
+        <h2>考试管理与成绩查询</h2>
+        <p>本系统基于 Spring Boot，支持考生账号管理、考生信息查询、考试记录查询和密码修改。</p>
+    </section>
+    <section class="grid">
+        <a class="card" th:href="@{/exams}">
+            <h3>考试记录</h3>
+            <p>查看全部考试安排、提交状态和考试得分。</p>
+        </a>
+        <a class="card" th:href="@{/getUserById}">
+            <h3>考生查询</h3>
+            <p>根据考生 ID 查看账号、邮箱、状态和准考证号。</p>
+        </a>
+        <a class="card" th:href="@{/getUserByStatus}">
+            <h3>考生列表</h3>
+            <p>按账号状态筛选考生，支持分页浏览。</p>
+        </a>
+        <a class="card" th:href="@{/updatepassword}">
+            <h3>修改密码</h3>
+            <p>考生可通过原密码更新登录密码。</p>
+        </a>
+    </section>
+</main>
+</body>
+</html>

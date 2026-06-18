@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考生查询</title>
+    <style>
+        body { margin: 0; font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+        main { max-width: 760px; margin: 36px auto; padding: 0 20px; }
+        a { color: #1d4ed8; text-decoration: none; }
+        .box { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 24px; margin-top: 16px; }
+        form { display: flex; gap: 10px; flex-wrap: wrap; }
+        input { flex: 1; min-width: 180px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
+        button { padding: 10px 18px; border: 0; border-radius: 6px; background: #1d4ed8; color: #fff; cursor: pointer; }
+        .msg { color: #b91c1c; }
+        dl { display: grid; grid-template-columns: 110px 1fr; gap: 10px; }
+        dt { color: #64748b; }
+        dd { margin: 0; }
+    </style>
+</head>
+<body>
+<main>
+    <a th:href="@{/}">返回首页</a>
+    <section class="box">
+        <h2>按 ID 查询考生</h2>
+        <form th:action="@{/getUserById}" method="get">
+            <input type="number" name="id" placeholder="请输入考生 ID" required>
+            <button type="submit">查询</button>
+        </form>
+        <p class="msg" th:if="${msg}" th:text="${msg}"></p>
+        <dl th:if="${user != null}">
+            <dt>考生 ID</dt><dd th:text="${user.id}"></dd>
+            <dt>用户名</dt><dd th:text="${user.username}"></dd>
+            <dt>姓名</dt><dd th:text="${user.nickname}"></dd>
+            <dt>邮箱</dt><dd th:text="${user.mail}"></dd>
+            <dt>账号状态</dt><dd th:text="${user.status}"></dd>
+            <dt>准考证号</dt><dd th:text="${user.userid}"></dd>
+        </dl>
+    </section>
+</main>
+</body>
+</html>

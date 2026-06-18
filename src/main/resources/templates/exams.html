@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考试记录</title>
+    <style>
+        body { margin: 0; font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+        main { max-width: 980px; margin: 36px auto; padding: 0 20px; }
+        a { color: #1d4ed8; text-decoration: none; }
+        .box { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 24px; margin-top: 16px; }
+        form { display: flex; gap: 10px; flex-wrap: wrap; }
+        input { flex: 1; min-width: 180px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
+        button { padding: 10px 18px; border: 0; border-radius: 6px; background: #1d4ed8; color: #fff; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { border-bottom: 1px solid #e2e8f0; padding: 10px; text-align: left; }
+        th { background: #f8fafc; color: #475569; }
+        .msg { color: #b91c1c; }
+    </style>
+</head>
+<body>
+<main>
+    <a th:href="@{/}">返回首页</a>
+    <section class="box">
+        <h2>考试记录查询</h2>
+        <form th:action="@{/exams}" method="get">
+            <input type="number" name="userId" th:value="${userId}" placeholder="输入准考证号，例如 100；留空查询全部">
+            <button type="submit">查询</button>
+        </form>
+        <p class="msg" th:if="${msg}" th:text="${msg}"></p>
+        <table th:if="${records != null and !records.isEmpty()}">
+            <thead>
+            <tr>
+                <th>准考证号</th>
+                <th>考试名称</th>
+                <th>科目</th>
+                <th>得分</th>
+                <th>总分</th>
+                <th>状态</th>
+                <th>提交时间</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="record : ${records}">
+                <td th:text="${record.userId}"></td>
+                <td th:text="${record.examName}"></td>
+                <td th:text="${record.subject}"></td>
+                <td th:text="${record.score}"></td>
+                <td th:text="${record.totalScore}"></td>
+                <td th:text="${record.status}"></td>
+                <td th:text="${record.submitTime == null ? '' : #temporals.format(record.submitTime, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${record.remark}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
