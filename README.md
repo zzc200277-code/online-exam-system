@@ -13,6 +13,40 @@
 - 自动统计总分、平均分、最高分、最低分、优秀科目数和低分预警数
 - 提供统一页面样式和成绩分析页面
 
+## 项目截图
+
+### 首页功能总览
+
+![首页功能总览](note/readme/page-home.png)
+
+### 登录注册页面
+
+![登录注册页面](note/readme/page-login.png)
+
+### 成绩分析页面
+
+![成绩分析页面](note/readme/page-score.png)
+
+## 关键代码截图
+
+### 成绩查询与统计分析
+
+`ScoreController` 负责接收学号查询请求，调用 `ScoreService` 获取成绩列表，并计算总分、平均分、最高分、最低分、优秀科目数、低分预警数等统计指标。
+
+![成绩查询与统计分析关键代码](note/readme/code-score-controller.png)
+
+### 用户登录、注册与查询
+
+`UserController` 负责登录注册、退出登录、用户 ID 查询、邮箱查询、状态分页查询和密码修改等用户相关功能。
+
+![用户登录注册与查询关键代码](note/readme/code-user-controller.png)
+
+### MyBatis 成绩查询
+
+`ScoreMapper` 使用 MyBatis 注解 SQL，根据学号查询成绩并按记录 ID 排序。
+
+![MyBatis 成绩查询关键代码](note/readme/code-score-mapper.png)
+
 ## 技术栈
 
 - Java 17
