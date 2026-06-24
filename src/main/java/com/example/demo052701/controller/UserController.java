@@ -79,7 +79,7 @@ public class UserController {
         }
         User user = userService.findById(id);
         if (user == null) {
-            model.addAttribute("msg", "没有查到对应考生");
+            model.addAttribute("msg", "没有查到对应用户");
         } else {
             model.addAttribute("user", user);
         }
@@ -90,7 +90,7 @@ public class UserController {
     public String getUserByMail(String mail, Model model) {
         User user = userService.findByMail(mail);
         if (user == null) {
-            model.addAttribute("msg", "没有查到对应考生");
+            model.addAttribute("msg", "没有查到对应用户");
         } else {
             model.addAttribute("user", user);
         }
@@ -113,8 +113,9 @@ public class UserController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("status", status);
+        model.addAttribute("totalUsers", total);
         if (pageUsers.isEmpty()) {
-            model.addAttribute("msg", "未找到考生");
+            model.addAttribute("msg", "未找到用户");
         }
         return "chaxun2";
     }

@@ -3,54 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>在线考试系统</title>
-    <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: "Microsoft YaHei", Arial, sans-serif; color: #1f2937; background: #f5f7fb; }
-        header { background: #1d4ed8; color: #fff; padding: 18px 36px; display: flex; justify-content: space-between; align-items: center; }
-        header h1 { margin: 0; font-size: 22px; }
-        header a { color: #fff; text-decoration: none; margin-left: 18px; }
-        main { max-width: 980px; margin: 36px auto; padding: 0 20px; }
-        .welcome { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 28px; margin-bottom: 20px; }
-        .welcome h2 { margin: 0 0 10px; font-size: 24px; }
-        .welcome p { margin: 0; color: #64748b; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
-        .card { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 22px; text-decoration: none; color: inherit; }
-        .card:hover { border-color: #1d4ed8; }
-        .card h3 { margin: 0 0 8px; font-size: 18px; }
-        .card p { margin: 0; color: #64748b; line-height: 1.6; }
-    </style>
+    <title>智慧校园数据中心</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<header>
-    <h1>在线考试系统</h1>
-    <nav>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark">校</span>
+        <span>智慧校园数据中心</span>
+    </a>
+    <nav class="nav">
+        <a th:href="@{/getUserById}">学生档案</a>
+        <a th:href="@{/getUserByStatus}">用户管理</a>
+        <a th:href="@{/getScoreByUserId}">成绩分析</a>
+        <a th:href="@{/updatepassword}">安全中心</a>
         <a th:if="${session.user == null}" th:href="@{/login}">登录 / 注册</a>
         <span th:if="${session.user != null}" th:text="'当前用户：' + ${session.user.username}"></span>
         <a th:if="${session.user != null}" th:href="@{/logout}">退出</a>
     </nav>
 </header>
-<main>
-    <section class="welcome">
-        <h2>考试管理与成绩查询</h2>
-        <p>本系统基于 Spring Boot，支持考生账号管理、考生信息查询、考试记录查询和密码修改。</p>
+
+<main class="page">
+    <section class="hero">
+        <div class="hero-panel">
+            <p class="eyebrow">STUDENT INSIGHT PLATFORM</p>
+            <h1>从学生信息到成绩预警的一体化管理平台</h1>
+            <p class="subtext">
+                集成账号管理、学生档案检索、状态筛选、成绩可视化、低分预警和报告导出，
+                适合课堂演示、课程设计答辩和日常教务数据分析。
+            </p>
+            <div class="hero-actions">
+                <a class="btn" th:href="@{/getScoreByUserId}">进入成绩分析</a>
+                <a class="btn secondary" th:href="@{/getUserByStatus}">查看用户状态</a>
+            </div>
+        </div>
+        <aside class="panel">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">演示账号</p>
+                    <h2>快速体验</h2>
+                </div>
+                <span class="badge ok">已配置 MySQL</span>
+            </div>
+            <ul class="insight-list">
+                <li><strong>账号 aa / 123</strong><br>学号 100，包含多门低分，可展示预警能力。</li>
+                <li><strong>账号 bb / 789</strong><br>学号 200，成绩更均衡，可展示优秀课程分析。</li>
+                <li><strong>推荐演示路径</strong><br>首页 -> 成绩分析 -> 输入 100 -> 导出/打印报告。</li>
+            </ul>
+        </aside>
     </section>
+
+    <section class="metrics">
+        <div class="metric">
+            <span>核心模块</span>
+            <strong>4</strong>
+            <small>登录注册 / 用户查询 / 成绩分析 / 安全中心</small>
+        </div>
+        <div class="metric">
+            <span>成绩洞察</span>
+            <strong>6+</strong>
+            <small>均分、最高分、最低分、优秀数、预警数、建议</small>
+        </div>
+        <div class="metric">
+            <span>交互能力</span>
+            <strong>3</strong>
+            <small>CSV 导出、打印报告、本地筛选搜索</small>
+        </div>
+        <div class="metric">
+            <span>数据安全</span>
+            <strong>✓</strong>
+            <small>登录态、密码修改、注册校验</small>
+        </div>
+    </section>
+
     <section class="grid">
-        <a class="card" th:href="@{/exams}">
-            <h3>考试记录</h3>
-            <p>查看全部考试安排、提交状态和考试得分。</p>
-        </a>
         <a class="card" th:href="@{/getUserById}">
-            <h3>考生查询</h3>
-            <p>根据考生 ID 查看账号、邮箱、状态和准考证号。</p>
+            <h3>学生档案检索</h3>
+            <p class="subtext">按用户 ID 快速定位学生基础资料，适合答辩时展示后端查询链路。</p>
         </a>
         <a class="card" th:href="@{/getUserByStatus}">
-            <h3>考生列表</h3>
-            <p>按账号状态筛选考生，支持分页浏览。</p>
+            <h3>用户状态管理</h3>
+            <p class="subtext">按启用、禁用、审核状态筛选用户，并支持分页浏览。</p>
+        </a>
+        <a class="card" th:href="@{/getScoreByUserId}">
+            <h3>成绩智能分析</h3>
+            <p class="subtext">自动计算关键指标、生成风险预警、可视化课程表现并导出报告。</p>
         </a>
         <a class="card" th:href="@{/updatepassword}">
-            <h3>修改密码</h3>
-            <p>考生可通过原密码更新登录密码。</p>
+            <h3>账号安全中心</h3>
+            <p class="subtext">提供密码修改流程，形成完整的账号生命周期管理闭环。</p>
         </a>
     </section>
 </main>

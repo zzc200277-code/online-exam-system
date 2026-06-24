@@ -10,6 +10,6 @@ public class Demo052701Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Demo052701Application.class, args);
-        System.out.println("在线考试系统已启动：http://localhost:8080/");
+        System.out.println("系统已启动：http://localhost:8080/");
     }
 }

@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 @Mapper
-public interface    UserMapper {
+public interface UserMapper {
 
     @Select("select * from user where username = #{username}")
     User findByUsername(String username);

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `exam_system` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `exam_system`;
+CREATE DATABASE IF NOT EXISTS `person` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `person`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -22,9 +22,10 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `mail`, `phone`, `avatar`, `createTime`, `updateTime`, `status`, `userid`) VALUES
-(1, 'student01', '123456', '张三', 'student01@example.com', '13800000001', NULL, NOW(), NOW(), 1, 100),
-(2, 'student02', '123456', '李四', 'student02@example.com', '13800000002', NULL, NOW(), NOW(), 1, 200),
-(3, 'student03', '123456', '王五', 'student03@example.com', '13800000003', NULL, NOW(), NOW(), 0, 300),
-(4, 'teacher01', '123456', '管理员', 'teacher01@example.com', '13800000004', NULL, NOW(), NOW(), 1, 900);
+(1, 'aa', '123', '张三', 'aa@example.com', '13800000001', NULL, NOW(), NOW(), 1, 100),
+(2, 'bb', '789', '李四', 'bb@example.com', '13800000002', NULL, NOW(), NOW(), 1, 200),
+(3, 'cc', '123', '王五', 'cc@example.com', '13800000003', NULL, NOW(), NOW(), 0, 300),
+(4, 'dd', '123', '赵六', 'dd@example.com', '13800000004', NULL, NOW(), NOW(), 2, 400),
+(5, 'ee', '123', '钱七', 'ee@example.com', '13800000005', NULL, NOW(), NOW(), 1, 500);
 
 SET FOREIGN_KEY_CHECKS = 1;

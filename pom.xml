@@ -12,13 +12,13 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>online-exam-system</artifactId>
+    <artifactId>demo052701</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>online-exam-system</name>
-    <description>基于 Spring Boot 的在线考试系统</description>
+    <name>demo052701</name>
+    <description>智慧校园管理系统</description>
 
     <properties>
-        <java.version>21</java.version>   <!-- 这里改成了 21 -->
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>

@@ -3,83 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>考生列表</title>
-    <style>
-        body { margin: 0; font-family: "Microsoft YaHei", Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
-        main { max-width: 920px; margin: 36px auto; padding: 0 20px; }
-        a { color: #1d4ed8; text-decoration: none; }
-        .box { background: #fff; border: 1px solid #dbe3ef; border-radius: 8px; padding: 24px; margin-top: 16px; }
-        form { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-        input { min-width: 180px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
-        button { padding: 10px 18px; border: 0; border-radius: 6px; background: #1d4ed8; color: #fff; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-        th, td { border-bottom: 1px solid #e2e8f0; padding: 10px; text-align: left; }
-        th { color: #475569; background: #f8fafc; }
-        .msg { color: #b91c1c; }
-        .pagination { margin-top: 18px; display: flex; gap: 14px; align-items: center; }
-        .disabled { color: #94a3b8; pointer-events: none; }
-        dl { display: grid; grid-template-columns: 110px 1fr; gap: 10px; }
-        dt { color: #64748b; }
-        dd { margin: 0; }
-    </style>
+    <title>用户状态管理</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<main>
-    <a th:href="@{/}">返回首页</a>
-    <section class="box">
-        <h2>按状态查询考生</h2>
-        <form th:action="@{/getUserByStatus}" method="get">
-            <input type="number" name="status" th:value="${status}" placeholder="状态，例如 1" required>
-            <button type="submit">查询</button>
-        </form>
-        <h2>按邮箱查询考生</h2>
-        <form th:action="@{/getUserByMail}" method="get">
-            <input type="email" name="mail" placeholder="请输入邮箱">
-            <button type="submit">查询</button>
-        </form>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark">管</span>
+        <span>智慧校园数据中心</span>
+    </a>
+    <nav class="nav">
+        <a th:href="@{/}">首页</a>
+        <a th:href="@{/getUserById}">学生档案</a>
+        <a th:href="@{/getScoreByUserId}">成绩分析</a>
+        <a th:href="@{/updatepassword}">安全中心</a>
+    </nav>
+</header>
 
+<main class="page">
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">USER OPERATIONS</p>
+                <h1>用户状态管理</h1>
+                <p class="subtext">支持按账号状态分页查询，也可以通过邮箱精确定位用户。</p>
+            </div>
+            <span class="badge ok" th:if="${totalUsers != null}" th:text="'共 ' + ${totalUsers} + ' 人'">共 0 人</span>
+        </div>
+
+        <div class="split">
+            <form class="panel" style="box-shadow:none; margin-top:0;" th:action="@{/getUserByStatus}" method="get">
+                <h3>按状态筛选</h3>
+                <p class="subtext">1 表示正常，0 表示待审核，2 表示异常。</p>
+                <label for="status">账号状态</label>
+                <select id="status" name="status">
+                    <option value="1" th:selected="${status == 1}">正常用户</option>
+                    <option value="0" th:selected="${status == 0}">待审核用户</option>
+                    <option value="2" th:selected="${status == 2}">异常用户</option>
+                </select>
+                <button type="submit" style="margin-top:12px;">查询列表</button>
+            </form>
+
+            <form class="panel" style="box-shadow:none; margin-top:0;" th:action="@{/getUserByMail}" method="get">
+                <h3>邮箱精确查询</h3>
+                <p class="subtext">输入邮箱查看单个用户档案。</p>
+                <label for="mail">邮箱</label>
+                <input id="mail" type="email" name="mail" placeholder="aa@example.com" required>
+                <button type="submit" style="margin-top:12px;">查询用户</button>
+            </form>
+        </div>
         <p class="msg" th:if="${msg}" th:text="${msg}"></p>
+    </section>
 
-        <dl th:if="${user != null}">
-            <dt>考生 ID</dt><dd th:text="${user.id}"></dd>
+    <section class="panel" th:if="${user != null}">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">MATCHED USER</p>
+                <h2 th:text="${user.nickname} ?: '用户详情'">用户详情</h2>
+            </div>
+            <span class="badge"
+                  th:classappend="${user.status == 1} ? ' ok' : (${user.status == 0} ? ' warn' : ' bad')"
+                  th:text="${user.status == 1} ? '正常' : (${user.status == 0} ? '待审核' : '异常')">状态</span>
+        </div>
+        <dl class="profile">
+            <dt>用户 ID</dt><dd th:text="${user.id}"></dd>
             <dt>用户名</dt><dd th:text="${user.username}"></dd>
-            <dt>姓名</dt><dd th:text="${user.nickname}"></dd>
+            <dt>昵称</dt><dd th:text="${user.nickname}"></dd>
             <dt>邮箱</dt><dd th:text="${user.mail}"></dd>
-            <dt>账号状态</dt><dd th:text="${user.status}"></dd>
-            <dt>准考证号</dt><dd th:text="${user.userid}"></dd>
+            <dt>状态</dt><dd th:text="${user.status}"></dd>
+            <dt>学号</dt><dd th:text="${user.userid}"></dd>
         </dl>
+    </section>
 
-        <table th:if="${users != null and !users.isEmpty()}">
-            <thead>
-            <tr>
-                <th>考生 ID</th>
-                <th>用户名</th>
-                <th>姓名</th>
-                <th>邮箱</th>
-                <th>状态</th>
-                <th>准考证号</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${users}">
-                <td th:text="${item.id}"></td>
-                <td th:text="${item.username}"></td>
-                <td th:text="${item.nickname}"></td>
-                <td th:text="${item.mail}"></td>
-                <td th:text="${item.status}"></td>
-                <td th:text="${item.userid}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <section class="panel" th:if="${users != null and !users.isEmpty()}">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">USER LIST</p>
+                <h2>用户列表</h2>
+            </div>
+            <input id="tableFilter" type="search" placeholder="搜索用户名 / 邮箱 / 学号" oninput="filterTable()">
+        </div>
+        <div class="table-wrap">
+            <table id="userTable">
+                <thead>
+                <tr>
+                    <th>用户 ID</th>
+                    <th>用户名</th>
+                    <th>昵称</th>
+                    <th>邮箱</th>
+                    <th>状态</th>
+                    <th>学号</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${users}">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.username}"></td>
+                    <td th:text="${item.nickname}"></td>
+                    <td th:text="${item.mail}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${item.status == 1} ? ' ok' : (${item.status == 0} ? ' warn' : ' bad')"
+                              th:text="${item.status == 1} ? '正常' : (${item.status == 0} ? '待审核' : '异常')">状态</span>
+                    </td>
+                    <td th:text="${item.userid}"></td>
+                    <td><a class="btn secondary" th:href="@{/getScoreByUserId(userid=${item.userid})}">成绩</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <div class="pagination" th:if="${users != null}">
-            <a th:classappend="${currentPage <= 1} ? 'disabled'"
+        <div class="pagination">
+            <a class="btn secondary" th:classappend="${currentPage <= 1} ? ' disabled'"
                th:href="@{/getUserByStatus(status=${status}, page=${currentPage - 1})}">上一页</a>
-            <span>第 <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span> 页</span>
-            <a th:classappend="${currentPage >= totalPages} ? 'disabled'"
+            <span>第 <strong th:text="${currentPage}"></strong> / <strong th:text="${totalPages}"></strong> 页</span>
+            <a class="btn secondary" th:classappend="${currentPage >= totalPages} ? ' disabled'"
                th:href="@{/getUserByStatus(status=${status}, page=${currentPage + 1})}">下一页</a>
         </div>
     </section>
 </main>
+
+<script>
+    function filterTable() {
+        const keyword = document.getElementById('tableFilter').value.trim().toLowerCase();
+        document.querySelectorAll('#userTable tbody tr').forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(keyword) ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>

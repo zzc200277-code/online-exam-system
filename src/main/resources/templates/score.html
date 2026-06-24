@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>成绩智能分析</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark">分</span>
+        <span>智慧校园数据中心</span>
+    </a>
+    <nav class="nav">
+        <a th:href="@{/}">首页</a>
+        <a th:href="@{/getUserById}">学生档案</a>
+        <a th:href="@{/getUserByStatus}">用户管理</a>
+        <a th:href="@{/updatepassword}">安全中心</a>
+    </nav>
+</header>
+
+<main class="page">
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">SCORE ANALYTICS</p>
+                <h1>成绩智能分析</h1>
+                <p class="subtext">输入学号后自动生成总分、均分、优势课程、薄弱课程、风险预警和可导出的成绩报告。</p>
+            </div>
+            <div class="toolbar">
+                <button type="button" class="btn secondary" onclick="exportCsv()">导出 CSV</button>
+                <button type="button" class="btn secondary" onclick="window.print()">打印报告</button>
+            </div>
+        </div>
+        <form class="search-form" th:action="@{/getScoreByUserId}" method="get">
+            <div>
+                <label for="userid">学生学号</label>
+                <input id="userid" type="number" name="userid" th:value="${userid}" placeholder="例如：100 / 200" required>
+            </div>
+            <button type="submit">生成分析报告</button>
+        </form>
+        <p class="msg" th:if="${msg}" th:text="${msg}"></p>
+    </section>
+
+    <section class="metrics" th:if="${ScoreResult != null and !ScoreResult.isEmpty()}">
+        <div class="metric">
+            <span>总分</span>
+            <strong th:text="${totalScore}">0</strong>
+            <small th:text="'共 ' + ${ScoreResult.size()} + ' 门课程'">共 0 门课程</small>
+        </div>
+        <div class="metric">
+            <span>平均分</span>
+            <strong th:text="${averageScore}">0</strong>
+            <small>综合学习水平</small>
+        </div>
+        <div class="metric">
+            <span>最高分</span>
+            <strong th:text="${highestScore}">0</strong>
+            <small th:if="${bestCourse != null}" th:text="${bestCourse.courseName}">优势课程</small>
+        </div>
+        <div class="metric">
+            <span>风险课程</span>
+            <strong th:text="${warningCount}">0</strong>
+            <small>低于 60 分自动预警</small>
+        </div>
+    </section>
+
+    <section class="split" th:if="${ScoreResult != null and !ScoreResult.isEmpty()}">
+        <div class="panel">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">VISUAL REPORT</p>
+                    <h2>课程表现图谱</h2>
+                </div>
+                <span class="badge" th:classappend="${warningCount > 0} ? ' bad' : ' ok'"
+                      th:text="${warningCount > 0} ? '需要关注' : '表现稳定'">状态</span>
+            </div>
+            <div class="chart">
+                <div class="bar-row" th:each="score : ${ScoreResult}">
+                    <strong th:text="${score.courseName}">课程</strong>
+                    <div class="bar-track">
+                        <div class="bar-fill" th:style="'width:' + ${score.score} + '%'"></div>
+                    </div>
+                    <span th:text="${score.score}">0</span>
+                </div>
+            </div>
+        </div>
+
+        <aside class="panel">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">AI-LIKE INSIGHTS</p>
+                    <h2>学习诊断建议</h2>
+                </div>
+            </div>
+            <ul class="insight-list">
+                <li th:if="${bestCourse != null}">
+                    <strong>优势课程：</strong>
+                    <span th:text="${bestCourse.courseName}">课程</span>
+                    <span th:text="'（' + ${bestCourse.score} + ' 分）'"></span>
+                    ，可作为稳定提分项继续保持。
+                </li>
+                <li th:if="${weakestCourse != null}">
+                    <strong>薄弱课程：</strong>
+                    <span th:text="${weakestCourse.courseName}">课程</span>
+                    <span th:text="'（' + ${weakestCourse.score} + ' 分）'"></span>
+                    ，建议安排专项复习和错题回顾。
+                </li>
+                <li>
+                    <strong>优秀课程数量：</strong>
+                    <span th:text="${excellentCount}">0</span>
+                    门达到 90 分及以上。
+                </li>
+                <li th:if="${warningCount > 0}">
+                    <strong>预警提示：</strong>
+                    有 <span th:text="${warningCount}">0</span> 门课程低于 60 分，建议优先补足基础知识。
+                </li>
+                <li th:if="${warningCount == 0}">
+                    <strong>整体表现：</strong>
+                    当前没有不及格课程，学习状态较稳定。
+                </li>
+            </ul>
+        </aside>
+    </section>
+
+    <section class="panel" th:if="${ScoreResult != null and !ScoreResult.isEmpty()}">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">DETAILS</p>
+                <h2>成绩明细</h2>
+            </div>
+            <input id="tableFilter" type="search" placeholder="搜索课程或备注" oninput="filterTable()">
+        </div>
+        <div class="table-wrap">
+            <table id="scoreTable">
+                <thead>
+                <tr>
+                    <th>课程名称</th>
+                    <th>分数</th>
+                    <th>等级</th>
+                    <th>备注</th>
+                    <th>创建时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="score : ${ScoreResult}">
+                    <td th:text="${score.courseName}">课程</td>
+                    <td th:text="${score.score}">0</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${score.score >= 90} ? ' ok' : (${score.score < 60} ? ' bad' : ' warn')"
+                              th:text="${score.score >= 90} ? '优秀' : (${score.score < 60} ? '预警' : '提升中')">等级</span>
+                    </td>
+                    <td th:text="${score.remark == null or score.remark.isEmpty()} ? '暂无' : ${score.remark}">备注</td>
+                    <td th:text="${#temporals.format(score.createTime, 'yyyy-MM-dd HH:mm')}">时间</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script>
+    function filterTable() {
+        const keyword = document.getElementById('tableFilter').value.trim().toLowerCase();
+        document.querySelectorAll('#scoreTable tbody tr').forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(keyword) ? '' : 'none';
+        });
+    }
+
+    function exportCsv() {
+        const table = document.getElementById('scoreTable');
+        if (!table) {
+            alert('请先查询成绩后再导出');
+            return;
+        }
+        const rows = [...table.querySelectorAll('tr')].map(row =>
+            [...row.children].map(cell => `"${cell.innerText.replaceAll('"', '""')}"`).join(',')
+        );
+        const blob = new Blob(['\ufeff' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'score-report.csv';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+</script>
+</body>
+</html>

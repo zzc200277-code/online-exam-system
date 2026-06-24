@@ -1,2 +1,2 @@
 SOURCE user060302.sql;
-SOURCE exam_record.sql;
+SOURCE score060301.sql;
